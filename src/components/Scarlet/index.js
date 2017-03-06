@@ -13,8 +13,8 @@ class Scarlet extends Component {
   constructor(props) {
     super(props);
 
-    this.onPlayerReady = this.onPlayerReady.bind(this);
-    this.onPlayerStateChange = this.onPlayerStateChange.bind(this);
+    this.handlePlayerReady = this.handlePlayerReady.bind(this);
+    this.handlePlayerStateChange = this.handlePlayerStateChange.bind(this);
   }
 
   state = {
@@ -37,18 +37,18 @@ class Scarlet extends Component {
         width: '640',
         videoId: 'M7lc1UVf-VE',
         events: {
-          onReady: this.onPlayerReady,
-          onStateChange: this.onPlayerStateChange,
+          onReady: this.handlePlayerReady,
+          onStateChange: this.handlePlayerStateChange,
         },
       });
     };
   }
 
-  onPlayerReady() {
+  handlePlayerReady() {
     this.player.playVideo();
   }
 
-  onPlayerStateChange(event) {
+  handlePlayerStateChange(event) {
     if (event.data === window.YT.PlayerState.ENDED) {
       this.player.stopVideo();
     }
