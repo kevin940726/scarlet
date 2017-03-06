@@ -10,13 +10,6 @@ class Scarlet extends Component {
     url: PropTypes.string.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.handlePlayerReady = this.handlePlayerReady.bind(this);
-    this.handlePlayerStateChange = this.handlePlayerStateChange.bind(this);
-  }
-
   state = {
     id: generate(),
   };
@@ -44,11 +37,11 @@ class Scarlet extends Component {
     };
   }
 
-  handlePlayerReady() {
+  handlePlayerReady = () => {
     this.player.playVideo();
   }
 
-  handlePlayerStateChange(event) {
+  handlePlayerStateChange = (event) => {
     if (event.data === window.YT.PlayerState.ENDED) {
       this.player.stopVideo();
     }
