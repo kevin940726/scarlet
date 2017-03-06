@@ -29,8 +29,8 @@ class Scarlet extends Component {
       document.body.appendChild(tag);
     }
 
-    // 3. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
+    // This function creates an <iframe> (and YouTube player)
+    // after the API code downloads.
     window.onYouTubeIframeAPIReady = () => {
       this.player = new window.YT.Player(this.state.id, {
         height: '390',
