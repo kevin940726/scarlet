@@ -1,59 +1,55 @@
 import React, { Component, PropTypes } from 'react';
-import { generate } from 'shortid';
+import Player from '../Player';
+import DefaultTheme from '../Theme';
+import setPlayer from '../../core/player';
 
 class Scarlet extends Component {
   static defaultProps = {
-    url: 'M7lc1UVf-VE',
-  };
+    children: methods => <DefaultTheme {...methods} />,
+  }
 
   static propTypes = {
-    url: PropTypes.string.isRequired,
+    playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
+    children: PropTypes.func,
   };
 
   state = {
-    id: generate(),
+    nowPlaying: 0,
   };
 
-  componentDidMount() {
-    if (!window.YT) {
-      // This code loads the IFrame Player API code asynchronously.
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.body.appendChild(tag);
-    }
-
-    // This function creates an <iframe> (and YouTube player)
-    // after the API code downloads.
-    window.onYouTubeIframeAPIReady = () => {
-      this.player = new window.YT.Player(this.state.id, {
-        height: '390',
-        width: '640',
-        videoId: 'M7lc1UVf-VE',
-        events: {
-          onReady: this.handlePlayerReady,
-          onStateChange: this.handlePlayerStateChange,
-        },
-      });
-    };
+  refCallback = (player, type) => {
+    this.player = setPlayer(player, type);
   }
 
-  handlePlayerReady = () => {
-    this.player.playVideo();
+  play = () => {
+    if (this.player) this.player.play();
   }
 
-  handlePlayerStateChange = (event) => {
-    if (event.data === window.YT.PlayerState.ENDED) {
-      this.player.stopVideo();
-    }
+  pause = () => {
+    if (this.player) this.player.pause();
   }
 
   player = null;
 
   render() {
-    const { id } = this.state;
+    const { playlist, children } = this.props;
+    const { nowPlaying } = this.state;
+
+    const methods = {
+      play: this.play,
+      pause: this.pause,
+    };
 
     return (
-      <div id={id}>loading...</div>
+      <div>
+        <Player
+          url={playlist[nowPlaying]}
+          refCallback={this.refCallback}
+          {...methods}
+        />
+        {children(methods)}
+      </div>
+
     );
   }
 }
