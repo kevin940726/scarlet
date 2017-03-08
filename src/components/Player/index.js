@@ -1,19 +1,21 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import getYoutubeId from 'get-youtube-id';
 
 import SC from './sc';
 import Youtube from './Youtube';
 import SoundCloud from './SoundCloud';
 
-class Player extends Component {
+class Player extends PureComponent {
   static propTypes = {
     url: PropTypes.string.isRequired,
     refCallback: PropTypes.func.isRequired,
+    onTimeUpdate: PropTypes.func.isRequired,
   };
 
   state = {
     type: '',
     videoId: '',
+    metadata: {},
   };
 
   componentDidMount() {
@@ -41,27 +43,42 @@ class Player extends Component {
             this.setState({
               type: 'soundcloud',
               videoId: `/tracks/${res.id}`,
+              metadata: res,
             });
           }
         });
     }
   }
 
-  render() {
-    const { refCallback } = this.props;
-    const { type, videoId } = this.state;
+  getPlayerComponent = () => {
+    const { type } = this.state;
 
     if (type === 'youtube') {
-      return (
-        <Youtube videoId={videoId} refCallback={refCallback} />
-      );
+      return Youtube;
     } else if (type === 'soundcloud') {
-      return (
-        <SoundCloud videoId={videoId} refCallback={refCallback} />
-      );
+      return SoundCloud;
     }
 
     return null;
+  }
+
+  render() {
+    const { refCallback, onTimeUpdate } = this.props;
+    const { videoId, metadata } = this.state;
+
+    const PlayerComponent = this.getPlayerComponent();
+
+    if (!PlayerComponent) {
+      return PlayerComponent;
+    }
+
+    return (
+      <PlayerComponent
+        videoId={videoId}
+        refCallback={refCallback(metadata)}
+        onTimeUpdate={onTimeUpdate}
+      />
+    );
   }
 }
 

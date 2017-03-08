@@ -5,6 +5,7 @@ class Youtube extends Component {
   static propTypes = {
     videoId: PropTypes.string.isRequired,
     refCallback: PropTypes.func.isRequired,
+    onTimeUpdate: PropTypes.func.isRequired,
   };
 
   state = {
@@ -34,8 +35,14 @@ class Youtube extends Component {
     };
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timeUpdateInterval);
+  }
+
   handlePlayerReady = () => {
     this.props.refCallback(this.player, 'youtube');
+
+    this.timeUpdateInterval = setInterval(this.props.onTimeUpdate, 250);
   }
 
   handlePlayerStateChange = (event) => {

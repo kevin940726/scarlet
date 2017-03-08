@@ -9,6 +9,21 @@ const DefaultButton = styled.button`
   border: 2px solid palevioletred;
 `;
 
+const DefaultProgressBar = styled.div`
+  width: 100px;
+  height: 20px;
+  text-align: center;
+  position: relative;
+  &:after: {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 20px;
+    width: ${({ percent }) => percent}%
+  }
+`;
+
 // eslint-disable-next-line no-console
 const defaultEventLogger = name => () => console.log(name);
 
@@ -16,17 +31,23 @@ class DefaultTheme extends PureComponent {
   static propTypes = {
     play: PropTypes.func,
     pause: PropTypes.func,
+    currentTime: PropTypes.number,
+    duration: PropTypes.number,
   };
 
   static defaultProps = {
     play: defaultEventLogger('play'),
     pause: defaultEventLogger('pause'),
+    currentTime: 0,
+    duration: 0,
   };
 
   render() {
     const {
       play,
       pause,
+      currentTime,
+      duration,
     } = this.props;
 
     return (
@@ -37,6 +58,9 @@ class DefaultTheme extends PureComponent {
         <DefaultButton onClick={pause}>
           Pause
         </DefaultButton>
+        <DefaultProgressBar percent={(currentTime / duration) || 0}>
+          {currentTime} / {duration}
+        </DefaultProgressBar>
       </div>
     );
   }
