@@ -59,7 +59,7 @@ class DefaultTheme extends PureComponent {
           Pause
         </DefaultButton>
         <DefaultProgressBar percent={(currentTime / duration) || 0}>
-          {currentTime} / {duration}
+          {Math.round(currentTime)} / {Math.round(duration)}
         </DefaultProgressBar>
       </div>
     );
