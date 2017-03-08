@@ -1,23 +1,33 @@
 import React, { PureComponent, PropTypes } from 'react';
-import Player from '../Player';
+import scarlet from '../../core/scarlet';
 import DefaultTheme from '../Theme';
-import setPlayer from '../../core/player';
 
-class Scarlet extends PureComponent {
-  static defaultProps = {
-    children: methods => <DefaultTheme {...methods} />,
-  }
-
+const Player = (Theme = DefaultTheme) => class extends PureComponent {
   static propTypes = {
     playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
-    children: PropTypes.func,
   };
 
   state = {
     nowPlaying: 0,
-    duration: 0,
     currentTime: 0,
+    duration: 0,
   };
+
+  componentDidMount() {
+    scarlet(this.props.playlist[this.state.nowPlaying], {
+      onTimeUpdate: this.onTimeUpdate,
+      onReady: this.onReady,
+    })
+      .then((player) => {
+        this.player = player;
+      });
+  }
+
+  onReady = () => {
+    this.setState({
+      duration: this.player.getDuration(),
+    });
+  }
 
   onTimeUpdate = () => {
     this.setState({
@@ -25,51 +35,28 @@ class Scarlet extends PureComponent {
     });
   }
 
-  getCurrentTime = () => this.player && this.player.getCurrentTime();
-
-  getDuration = () => this.player && this.player.duration;
-
-  play = () => {
-    if (this.player) this.player.play();
-  }
-
-  pause = () => {
-    if (this.player) this.player.pause();
-  }
-
-  refCallback = (metadata = {}) => (player, type) => {
-    this.player = setPlayer(player, type, metadata);
-    this.setState({
-      duration: this.player.getDuration(),
-    });
-  }
-
-  player = null;
+  player = {};
 
   render() {
-    const { playlist, children } = this.props;
-    const { nowPlaying, currentTime, duration } = this.state;
-
-    const methods = {
-      onTimeUpdate: this.onTimeUpdate,
-      play: this.play,
-      pause: this.pause,
+    const {
       currentTime,
       duration,
-    };
+    } = this.state;
+
+    const {
+      play,
+      pause,
+    } = this.player;
 
     return (
-      <div>
-        <Player
-          url={playlist[nowPlaying]}
-          refCallback={this.refCallback}
-          onTimeUpdate={this.onTimeUpdate}
-        />
-        {children(methods)}
-      </div>
-
+      <Theme
+        currentTime={currentTime}
+        duration={duration}
+        play={play}
+        pause={pause}
+      />
     );
   }
-}
+};
 
-export default Scarlet;
+export default Player;
