@@ -27,6 +27,7 @@ const SoundCloud = (videoId, methods = {}) => {
   const pause = () => player && player.pause();
 
   return {
+    title: methods.title,
     play,
     pause,
     getCurrentTime,

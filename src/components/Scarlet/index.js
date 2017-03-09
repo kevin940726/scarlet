@@ -2,7 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import scarlet from '../../core/scarlet';
 import DefaultTheme from '../Theme';
 
-const Player = (Theme = DefaultTheme) => class extends PureComponent {
+const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
   static propTypes = {
     playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
@@ -44,12 +44,14 @@ const Player = (Theme = DefaultTheme) => class extends PureComponent {
     } = this.state;
 
     const {
+      title,
       play,
       pause,
     } = this.player;
 
     return (
       <Theme
+        title={title}
         currentTime={currentTime}
         duration={duration}
         play={play}

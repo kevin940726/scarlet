@@ -64,6 +64,7 @@ function Youtube(videoId, methods = {}) {
   };
 
   return {
+    title: methods.title,
     play,
     pause,
     getCurrentTime,

@@ -29,6 +29,7 @@ const defaultEventLogger = name => () => console.log(name);
 
 class DefaultTheme extends PureComponent {
   static propTypes = {
+    title: PropTypes.string,
     play: PropTypes.func,
     pause: PropTypes.func,
     currentTime: PropTypes.number,
@@ -36,6 +37,7 @@ class DefaultTheme extends PureComponent {
   };
 
   static defaultProps = {
+    title: '',
     play: defaultEventLogger('play'),
     pause: defaultEventLogger('pause'),
     currentTime: 0,
@@ -44,6 +46,7 @@ class DefaultTheme extends PureComponent {
 
   render() {
     const {
+      title,
       play,
       pause,
       currentTime,
@@ -52,6 +55,7 @@ class DefaultTheme extends PureComponent {
 
     return (
       <div>
+        <h3>{title}</h3>
         <DefaultButton onClick={play}>
           Play
         </DefaultButton>
