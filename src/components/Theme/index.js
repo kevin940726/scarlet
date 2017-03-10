@@ -36,6 +36,7 @@ class DefaultTheme extends PureComponent {
     duration: PropTypes.number,
     volume: PropTypes.number,
     setVolume: PropTypes.func,
+    seekTo: PropTypes.func,
   };
 
   static defaultProps = {
@@ -46,10 +47,15 @@ class DefaultTheme extends PureComponent {
     duration: 0,
     volume: 100,
     setVolume: defaultEventLogger('setVolume'),
+    seekTo: defaultEventLogger('seekTo'),
   };
 
   handleVolumeChange = (e) => {
     this.props.setVolume(e.target.value);
+  }
+
+  handleSeekChange = (e) => {
+    this.props.seekTo(e.target.value);
   }
 
   render() {
@@ -71,6 +77,7 @@ class DefaultTheme extends PureComponent {
         <DefaultButton onClick={pause}>
           Pause
         </DefaultButton>
+        <input type="range" min="0" max={duration} value={currentTime} onChange={this.handleSeekChange} />
         <DefaultProgressBar percent={(currentTime / duration) || 0}>
           {Math.round(currentTime)} / {Math.round(duration)}
         </DefaultProgressBar>

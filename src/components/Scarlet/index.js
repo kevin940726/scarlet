@@ -46,6 +46,15 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     }
   }
 
+  handleSeekTo = (time) => {
+    if (this.player) {
+      this.player.seekTo(time);
+      this.setState({
+        currentTime: this.player.getCurrentTime(),
+      });
+    }
+  }
+
   player = {};
 
   render() {
@@ -70,6 +79,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
         duration={duration}
         volume={volume}
         setVolume={this.handleSetVolume}
+        seekTo={this.handleSeekTo}
       />
     );
   }
