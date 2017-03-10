@@ -14,6 +14,7 @@ const SoundCloud = (videoId, methods = {}) => {
       }
 
       player.on('time', methods.onTimeUpdate);
+      player.on('finish', methods.onEnd);
 
       methods.onReady();
     });

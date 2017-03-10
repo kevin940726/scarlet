@@ -18,6 +18,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     scarlet(this.props.playlist[this.state.nowPlaying], {
       onTimeUpdate: this.onTimeUpdate,
       onReady: this.onReady,
+      onEnd: this.onEnd,
     })
       .then((player) => {
         this.player = player;
@@ -35,6 +36,12 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     this.setState({
       currentTime: this.player.getCurrentTime(),
     });
+  }
+
+  onEnd = () => {
+    this.setState(({ nowPlaying }, { playlist }) => ({
+      nowPlaying: nowPlaying + 1 >= playlist.length ? nowPlaying : nowPlaying + 1,
+    }));
   }
 
   handleSetVolume = (volume) => {
