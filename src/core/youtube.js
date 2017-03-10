@@ -21,6 +21,10 @@ function Youtube(videoId, methods = {}) {
 
   const getDuration = () => player && player.getDuration();
 
+  const getVolume = () => player && player.getVolume();
+
+  const setVolume = volume => player && player.setVolume(volume);
+
   const handlePlayerReady = () => {
     if (timeUpdateInterval) {
       clearInterval(timeUpdateInterval);
@@ -69,6 +73,8 @@ function Youtube(videoId, methods = {}) {
     pause,
     getCurrentTime,
     getDuration,
+    getVolume,
+    setVolume,
   };
 }
 

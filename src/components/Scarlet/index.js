@@ -11,6 +11,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     nowPlaying: 0,
     currentTime: 0,
     duration: 0,
+    volume: 100,
   };
 
   componentDidMount() {
@@ -26,6 +27,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
   onReady = () => {
     this.setState({
       duration: this.player.getDuration(),
+      volume: this.player.getVolume(),
     });
   }
 
@@ -35,12 +37,22 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     });
   }
 
+  handleSetVolume = (volume) => {
+    if (this.player) {
+      this.player.setVolume(volume);
+      this.setState({
+        volume: this.player.getVolume(),
+      });
+    }
+  }
+
   player = {};
 
   render() {
     const {
       currentTime,
       duration,
+      volume,
     } = this.state;
 
     const {
@@ -52,10 +64,12 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     return (
       <Theme
         title={title}
-        currentTime={currentTime}
-        duration={duration}
         play={play}
         pause={pause}
+        currentTime={currentTime}
+        duration={duration}
+        volume={volume}
+        setVolume={this.handleSetVolume}
       />
     );
   }

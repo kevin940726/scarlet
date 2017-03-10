@@ -22,6 +22,10 @@ const SoundCloud = (videoId, methods = {}) => {
 
   const getDuration = () => methods.duration / 1000; // milliseconds to seconds
 
+  const getVolume = () => player && player.getVolume() * 100; // 0~1 to 0~100
+
+  const setVolume = volume => player && player.setVolume(volume / 100); // 0~100 to 0~1
+
   const play = () => player && player.play();
 
   const pause = () => player && player.pause();
@@ -32,6 +36,8 @@ const SoundCloud = (videoId, methods = {}) => {
     pause,
     getCurrentTime,
     getDuration,
+    getVolume,
+    setVolume,
   };
 };
 
