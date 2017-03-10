@@ -15,14 +15,29 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
   };
 
   componentDidMount() {
-    scarlet(this.props.playlist[this.state.nowPlaying], {
+    scarlet({
       onTimeUpdate: this.onTimeUpdate,
       onReady: this.onReady,
       onEnd: this.onEnd,
     })
-      .then((player) => {
-        this.player = player;
+      .then((loadTrack) => {
+        this.scarlet = loadTrack;
+        this.loadTrack(this.props.playlist[this.state.nowPlaying]);
       });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.nowPlaying !== this.state.nowPlaying) {
+      this.loadTrack(this.props.playlist[this.state.nowPlaying]);
+    }
+  }
+
+  loadTrack = async (url) => {
+    this.player = await this.scarlet(url);
+    this.setState({
+      currentTime: 0,
+      duration: 0,
+    });
   }
 
   onReady = () => {
@@ -62,6 +77,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     }
   }
 
+  scarlet = {};
   player = {};
 
   render() {

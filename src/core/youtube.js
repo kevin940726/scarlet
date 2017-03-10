@@ -1,6 +1,6 @@
 import { generate } from 'shortid';
 
-function Youtube(videoId, methods = {}) {
+function youtube(methods = {}) {
   let player = null;
   const wrapperId = generate(); // generate a non-collision id
   let timeUpdateInterval = 0;
@@ -43,42 +43,43 @@ function Youtube(videoId, methods = {}) {
     }
   };
 
-  // This function creates an <iframe> (and YouTube player)
-  // after the API code downloads.
-  window.onYouTubeIframeAPIReady = () => {
+  const play = () => player && player.playVideo();
+
+  const pause = () => player && player.pauseVideo();
+
+  function loadTrack(trackId, metadata) {
+    this.title = metadata.title;
+
     player = new window.YT.Player(wrapperId, {
-      height: '390',
-      width: '640',
-      videoId,
+      height: '0',
+      width: '0',
+      videoId: trackId,
       events: {
         onReady: handlePlayerReady,
         onStateChange: handlePlayerStateChange,
       },
     });
-  };
 
-  const play = () => {
-    if (player) {
-      player.playVideo();
-    }
-  };
+    return this;
+  }
 
-  const pause = () => {
-    if (player) {
-      player.pauseVideo();
-    }
-  };
-
-  return {
-    title: methods.title,
-    play,
-    pause,
-    getCurrentTime,
-    getDuration,
-    getVolume,
-    setVolume,
-    seekTo,
-  };
+  return new Promise((resolve) => {
+    // This function creates an <iframe> (and YouTube player)
+    // after the API code downloads.
+    window.onYouTubeIframeAPIReady = () => {
+      resolve({
+        title: '',
+        play,
+        pause,
+        getCurrentTime,
+        getDuration,
+        getVolume,
+        setVolume,
+        seekTo,
+        loadTrack,
+      });
+    };
+  });
 }
 
-export default Youtube;
+export default youtube;

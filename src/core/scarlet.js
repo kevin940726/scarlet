@@ -4,35 +4,34 @@ import { stringify } from 'query-string';
 import SC from './sc';
 import credentials from '../credentials.json';
 
-import Youtube from './youtube';
-import SoundCloud from './soundcloud';
+import youtube from './youtube';
+import soundcloud from './soundcloud';
 
-const scarlet = async (url, methods = {}) => {
-  const youtubeVideoId = getYoutubeId(url, { fuzzy: false });
+const scarlet = async (methods = {}) => {
+  const youtubePlayer = await youtube(methods);
+  const soundcloudPlayer = soundcloud(methods);
 
-  if (youtubeVideoId) {
-    const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${stringify({
-      part: 'snippet',
-      id: youtubeVideoId,
-      key: credentials.youtubeApiKey,
-    })}`).then(response => response.json());
+  return async (url) => {
+    const youtubeVideoId = getYoutubeId(url, { fuzzy: false });
 
-    return new Youtube(youtubeVideoId, {
-      ...res.items[0].snippet,
-      ...methods,
-    });
-  }
+    if (youtubeVideoId) {
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${stringify({
+        part: 'snippet',
+        id: youtubeVideoId,
+        key: credentials.youtubeApiKey,
+      })}`).then(response => response.json());
 
-  const res = await SC.resolve(url);
+      return youtubePlayer.loadTrack(youtubeVideoId, res.items[0].snippet);
+    }
 
-  if (res && res.kind === 'track') {
-    return new SoundCloud(`/tracks/${res.id}`, {
-      ...res,
-      ...methods,
-    });
-  }
+    const res = await SC.resolve(url);
 
-  return null;
+    if (res && res.kind === 'track' && res.id) {
+      return soundcloudPlayer.loadTrack(`/tracks/${res.id}`, res);
+    }
+
+    return null;
+  };
 };
 
 export default scarlet;

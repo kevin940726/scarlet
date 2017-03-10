@@ -19,4 +19,12 @@ storiesOf('refactor', module)
         'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
       ]}
     />
+  ))
+  .add('two soundcloud', () => (
+    <Player
+      playlist={[
+        'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
+        'https://soundcloud.com/jacksonbreitmusic/show-me-the-money-jerry',
+      ]}
+    />
   ));
