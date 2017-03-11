@@ -1,3 +1,14 @@
+/**
+ * You can implement your own theme component,
+ * you only need to make those props avaiable for Scarlet to call,
+ * Scarlet will handle the rest for you.
+ * All the theming and style are completly customizable.
+ * This component is just a default theme for Scarlet,
+ * fork this and customize it might be a good start.
+ *
+ * We use `styled-component` to style this default theme component,
+ * but all the other ways should be fine too.
+ */
 import React, { PureComponent, PropTypes } from 'react';
 import styled from 'styled-components';
 
@@ -24,20 +35,22 @@ const DefaultProgressBar = styled.div`
   }
 `;
 
+// default to log the event to provide easy debuging interface
 // eslint-disable-next-line no-console
 const defaultEventLogger = name => () => console.log(name);
 
+// make it a pure component may be a good practice in most situation.
 class DefaultTheme extends PureComponent {
   static propTypes = {
-    isLoading: PropTypes.bool,
-    title: PropTypes.string,
-    play: PropTypes.func,
-    pause: PropTypes.func,
-    currentTime: PropTypes.number,
-    duration: PropTypes.number,
-    volume: PropTypes.number,
-    setVolume: PropTypes.func,
-    seekTo: PropTypes.func,
+    isLoading: PropTypes.bool, // if the track is loading
+    title: PropTypes.string, // track title
+    play: PropTypes.func, // function to play the track
+    pause: PropTypes.func, // function to pause the track
+    currentTime: PropTypes.number, // current time of the playback in seconds
+    duration: PropTypes.number, // total duration of the track in seconds
+    volume: PropTypes.number, // volume between 0 to 100
+    setVolume: PropTypes.func, // function to set the volume
+    seekTo: PropTypes.func, // function to seek to a specific time of the playback
   };
 
   static defaultProps = {
@@ -52,6 +65,8 @@ class DefaultTheme extends PureComponent {
     seekTo: defaultEventLogger('seekTo'),
   };
 
+  // Scarlet don't assume your volume or progress component should be an input,
+  // so you need to implement the event handler for your component and call the methods from props.
   handleVolumeChange = (e) => {
     this.props.setVolume(e.target.value);
   }

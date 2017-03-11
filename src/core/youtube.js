@@ -32,15 +32,19 @@ function youtube(methods = {}) {
       clearInterval(timeUpdateInterval);
     }
 
+    // fire time update callback
     timeUpdateInterval = setInterval(methods.onTimeUpdate, 250);
 
+    // fire onReady callback
     methods.onReady();
   };
 
   const handlePlayerStateChange = (event) => {
     if (event.data === window.YT.PlayerState.ENDED) {
+      // track ended
       methods.onEnd();
     } else if (event.data === window.YT.PlayerState.CUED) {
+      // new track is cued
       handlePlayerReady();
     }
   };
@@ -56,6 +60,7 @@ function youtube(methods = {}) {
       clearInterval(timeUpdateInterval);
     }
 
+    // if there is already a player instance, cue new track, or else won't work
     if (player) {
       player.cueVideoById(trackId);
     } else {

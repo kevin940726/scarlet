@@ -29,9 +29,11 @@ function soundcloud(methods = {}) {
           player.options.protocols.splice(0, 1);
         }
 
+        // fire callback on event
         player.on('time', methods.onTimeUpdate);
         player.on('finish', methods.onEnd);
 
+        // fire onReady callback
         methods.onReady();
       });
 
@@ -43,6 +45,7 @@ function soundcloud(methods = {}) {
     play,
     pause,
     getCurrentTime,
+    // default to zero, this part is implement on every `loadTrack` call
     getDuration: () => 0,
     getVolume,
     setVolume,
