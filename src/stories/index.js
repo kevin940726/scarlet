@@ -27,4 +27,12 @@ storiesOf('refactor', module)
         'https://soundcloud.com/jacksonbreitmusic/show-me-the-money-jerry',
       ]}
     />
+  ))
+  .add('two youtube', () => (
+    <Player
+      playlist={[
+        'https://www.youtube.com/watch?v=ULyTXwjojgc',
+        'https://www.youtube.com/watch?v=5ANRKzwcEEY&list=FLp9N6FdCzTyQZKMOZEz2Kjw&index=1',
+      ]}
+    />
   ));

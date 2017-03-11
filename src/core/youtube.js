@@ -40,25 +40,35 @@ function youtube(methods = {}) {
   const handlePlayerStateChange = (event) => {
     if (event.data === window.YT.PlayerState.ENDED) {
       methods.onEnd();
+    } else if (event.data === window.YT.PlayerState.CUED) {
+      handlePlayerReady();
     }
   };
 
-  const play = () => player && player.playVideo();
+  const play = () => player && player.playVideo && player.playVideo();
 
-  const pause = () => player && player.pauseVideo();
+  const pause = () => player && player.pauseVideo && player.pauseVideo();
 
   function loadTrack(trackId, metadata) {
     this.title = metadata.title;
 
-    player = new window.YT.Player(wrapperId, {
-      height: '0',
-      width: '0',
-      videoId: trackId,
-      events: {
-        onReady: handlePlayerReady,
-        onStateChange: handlePlayerStateChange,
-      },
-    });
+    if (timeUpdateInterval) {
+      clearInterval(timeUpdateInterval);
+    }
+
+    if (player) {
+      player.cueVideoById(trackId);
+    } else {
+      player = new window.YT.Player(wrapperId, {
+        height: '0',
+        width: '0',
+        videoId: trackId,
+        events: {
+          onReady: handlePlayerReady,
+          onStateChange: handlePlayerStateChange,
+        },
+      });
+    }
 
     return this;
   }
