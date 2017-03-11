@@ -35,4 +35,20 @@ storiesOf('refactor', module)
         'https://www.youtube.com/watch?v=5ANRKzwcEEY&list=FLp9N6FdCzTyQZKMOZEz2Kjw&index=1',
       ]}
     />
+  ))
+  .add('youtube then soundcloud', () => (
+    <Player
+      playlist={[
+        'https://www.youtube.com/watch?v=ULyTXwjojgc',
+        'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
+      ]}
+    />
+  ))
+  .add('soundcloud then youtube', () => (
+    <Player
+      playlist={[
+        'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
+        'https://www.youtube.com/watch?v=ULyTXwjojgc',
+      ]}
+    />
   ));

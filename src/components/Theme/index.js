@@ -81,11 +81,11 @@ class DefaultTheme extends PureComponent {
         <DefaultButton onClick={pause}>
           Pause
         </DefaultButton>
-        <input type="range" min="0" max={duration} value={currentTime} onChange={this.handleSeekChange} />
+        <input type="range" min="0" max={duration} value={currentTime || 0} onChange={this.handleSeekChange} />
         <DefaultProgressBar percent={(currentTime / duration) || 0}>
           {Math.round(currentTime)} / {Math.round(duration)}
         </DefaultProgressBar>
-        <input type="range" min="0" max="100" value={volume} onChange={this.handleVolumeChange} />
+        <input type="range" min="0" max="100" value={volume || 0} onChange={this.handleVolumeChange} />
       </div>
     );
   }
