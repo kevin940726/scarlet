@@ -3,8 +3,13 @@ import scarlet from '../../core/scarlet';
 import DefaultTheme from '../Theme';
 
 const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
+  static defaultProps = {
+    isAutoPlay: true,
+  };
+
   static propTypes = {
     playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isAutoPlay: PropTypes.bool,
   };
 
   state = {
@@ -12,6 +17,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     currentTime: 0,
     duration: 0,
     volume: 100,
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -33,6 +39,9 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
   }
 
   loadTrack = async (url) => {
+    this.setState({
+      isLoading: true,
+    });
     this.player = await this.scarlet(url);
     this.setState({
       currentTime: 0,
@@ -44,7 +53,12 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     this.setState({
       duration: this.player.getDuration(),
       volume: this.player.getVolume(),
+      isLoading: false,
     });
+
+    if (this.props.isAutoPlay) {
+      this.player.play();
+    }
   }
 
   onTimeUpdate = () => {
@@ -85,6 +99,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
       currentTime,
       duration,
       volume,
+      isLoading,
     } = this.state;
 
     const {
@@ -95,6 +110,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
 
     return (
       <Theme
+        isLoading={isLoading}
         title={title}
         play={play}
         pause={pause}

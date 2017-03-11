@@ -29,6 +29,7 @@ const defaultEventLogger = name => () => console.log(name);
 
 class DefaultTheme extends PureComponent {
   static propTypes = {
+    isLoading: PropTypes.bool,
     title: PropTypes.string,
     play: PropTypes.func,
     pause: PropTypes.func,
@@ -40,6 +41,7 @@ class DefaultTheme extends PureComponent {
   };
 
   static defaultProps = {
+    isLoading: true,
     title: '',
     play: defaultEventLogger('play'),
     pause: defaultEventLogger('pause'),
@@ -60,6 +62,7 @@ class DefaultTheme extends PureComponent {
 
   render() {
     const {
+      isLoading,
       title,
       play,
       pause,
@@ -70,6 +73,7 @@ class DefaultTheme extends PureComponent {
 
     return (
       <div>
+        {isLoading && 'loading...'}
         <h3>{title}</h3>
         <DefaultButton onClick={play}>
           Play
