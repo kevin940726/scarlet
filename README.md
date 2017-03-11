@@ -11,7 +11,7 @@ yarn run storybook
 
 ## Contributing
 
-Contrubution welcome! :hooray:
+Contributions welcome! :raised_hands:
 
 ## Author
 
