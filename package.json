@@ -15,6 +15,7 @@
   "devDependencies": {
     "@kadira/storybook": "^2.21.0",
     "babel-eslint": "^7.1.1",
+    "emoji-cz": "^0.2.2",
     "eslint": "3.16.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
@@ -30,5 +31,10 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "lint": "eslint src"
+  },
+  "config": {
+    "commitizen": {
+      "path": "emoji-cz"
+    }
   }
 }
