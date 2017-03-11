@@ -1,5 +1,6 @@
 {
   "name": "scarlet",
+  "description": "The web music player for Youtube, SoundCloud with React.",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
