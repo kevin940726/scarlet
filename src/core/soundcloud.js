@@ -1,57 +1,55 @@
 import SC from './sc';
 
-function soundcloud(methods = {}) {
-  let player = null;
+class SoundCloud {
+  player = null;
+  title = '';
+  isPlaying = false;
+  duration = 0;
 
-  const getCurrentTime = () => player && player.currentTime() / 1000; // milliseconds to seconds
+  constructor(methods = {}) {
+    this.methods = methods;
+  }
 
-  const getVolume = () => player && player.getVolume() * 100; // 0~1 to 0~100
+  getCurrentTime = () => this.player && this.player.currentTime() / 1000; // milliseconds to seconds
 
-  const setVolume = volume => player && player.setVolume(volume / 100); // 0~100 to 0~1
+  getDuration = () => this.duration;
 
-  const seekTo = time => player && player.seek(time * 1000); // seconds to milliseconds
+  getVolume = () => this.player && this.player.getVolume() * 100; // 0~1 to 0~100
 
-  const play = () => player && player.play();
+  setVolume = volume => this.player && this.player.setVolume(volume / 100); // 0~100 to 0~1
 
-  const pause = () => player && player.pause();
+  seekTo = time => this.player && this.player.seek(time * 1000); // seconds to milliseconds
 
-  function loadTrack(trackId, metadata = {}) {
+  play = () => this.player && this.player.play();
+
+  pause = () => this.player && this.player.pause();
+
+  stop = () => this.player && this.player.dispose();
+
+  loadTrack = (trackId, metadata = {}) => {
     this.title = metadata.title;
-    this.getDuration = () => metadata.duration / 1000; // milliseconds to seconds
+    this.duration = metadata.duration / 1000; // milliseconds to seconds
 
     SC.stream(trackId)
-      .then((p) => {
-        player = p;
+      .then((player) => {
+        this.player = player;
 
         // tell chrome to not to use flash
         // https://github.com/soundcloud/soundcloud-javascript/issues/39#issuecomment-238250274
-        if (player.options.protocols[0] === 'rtmp') {
-          player.options.protocols.splice(0, 1);
+        if (this.player.options.protocols[0] === 'rtmp') {
+          this.player.options.protocols.splice(0, 1);
         }
 
         // fire callback on event
-        player.on('time', methods.onTimeUpdate);
-        player.on('finish', methods.onEnd);
+        this.player.on('time', this.methods.onTimeUpdate);
+        this.player.on('finish', this.methods.onEnd);
 
         // fire onReady callback
-        methods.onReady();
+        this.methods.onReady();
       });
 
     return this;
   }
-
-  return {
-    title: '',
-    play,
-    pause,
-    getCurrentTime,
-    // default to zero, this part is implement on every `loadTrack` call
-    getDuration: () => 0,
-    getVolume,
-    setVolume,
-    seekTo,
-    loadTrack,
-  };
 }
 
-export default soundcloud;
+export default SoundCloud;

@@ -25,6 +25,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
       onTimeUpdate: this.onTimeUpdate,
       onReady: this.onReady,
       onEnd: this.onEnd,
+      onDurationReady: this.onDurationReady,
     })
       .then((loadTrack) => {
         this.scarlet = loadTrack;
@@ -61,6 +62,12 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     }
   }
 
+  onDurationReady = () => {
+    this.setState({
+      duration: this.player.getDuration(),
+    });
+  }
+
   onTimeUpdate = () => {
     this.setState({
       currentTime: this.player.getCurrentTime(),
@@ -68,8 +75,18 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
   }
 
   onEnd = () => {
+    this.nextTrack();
+  }
+
+  nextTrack = () => {
     this.setState(({ nowPlaying }, { playlist }) => ({
-      nowPlaying: nowPlaying + 1 >= playlist.length ? nowPlaying : nowPlaying + 1,
+      nowPlaying: nowPlaying + 1 >= playlist.length ? 0 : nowPlaying + 1,
+    }));
+  }
+
+  prevTrack = () => {
+    this.setState(({ nowPlaying }, { playlist }) => ({
+      nowPlaying: nowPlaying - 1 < 0 ? playlist.length - 1 : nowPlaying - 1,
     }));
   }
 
@@ -106,6 +123,7 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
       title,
       play,
       pause,
+      stop,
     } = this.player;
 
     return (
@@ -114,11 +132,14 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
         title={title}
         play={play}
         pause={pause}
+        stop={stop}
         currentTime={currentTime}
         duration={duration}
         volume={volume}
         setVolume={this.handleSetVolume}
         seekTo={this.handleSeekTo}
+        prevTrack={this.prevTrack}
+        nextTrack={this.nextTrack}
       />
     );
   }

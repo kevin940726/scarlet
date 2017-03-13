@@ -5,14 +5,18 @@ import SC from './sc';
 import credentials from '../credentials.json';
 
 import youtube from './youtube';
-import soundcloud from './soundcloud';
+import SoundCloud from './soundcloud';
 
 const scarlet = async (methods = {}) => {
   // await youtube to finish loading the API
   const youtubePlayer = await youtube(methods);
-  const soundcloudPlayer = soundcloud(methods);
+  const soundcloudPlayer = new SoundCloud(methods);
 
   return async (url) => {
+    // stop previous player to prevent overlapping of two players
+    youtubePlayer.stop();
+    soundcloudPlayer.stop();
+
     const youtubeVideoId = getYoutubeId(url, { fuzzy: false });
 
     // if type is youtube

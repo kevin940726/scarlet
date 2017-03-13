@@ -39,6 +39,30 @@ const DefaultProgressBar = styled.div`
 // eslint-disable-next-line no-console
 const defaultEventLogger = name => () => console.log(name);
 
+const DefaultProgress = ({ currentTime, duration, handleSeekChange }) => (
+  <div>
+    <input type="range" min="0" max={duration} value={currentTime || 0} onChange={handleSeekChange} />
+    <DefaultProgressBar percent={(currentTime / duration) || 0}>
+      {Math.round(currentTime)} / {Math.round(duration)}
+    </DefaultProgressBar>
+  </div>
+);
+DefaultProgress.propTypes = {
+  currentTime: PropTypes.number.isRequired,
+  duration: PropTypes.number.isRequired,
+  handleSeekChange: PropTypes.func.isRequired,
+};
+
+const DefaultVolume = ({ volume, handleVolumeChange }) => (
+  <div>
+    <input type="range" min="0" max="100" value={volume || 0} onChange={handleVolumeChange} />
+  </div>
+);
+DefaultVolume.propTypes = {
+  volume: PropTypes.number.isRequired,
+  handleVolumeChange: PropTypes.func.isRequired,
+};
+
 // make it a pure component may be a good practice in most situation.
 class DefaultTheme extends PureComponent {
   static propTypes = {
@@ -51,6 +75,8 @@ class DefaultTheme extends PureComponent {
     volume: PropTypes.number, // volume between 0 to 100
     setVolume: PropTypes.func, // function to set the volume
     seekTo: PropTypes.func, // function to seek to a specific time of the playback
+    nextTrack: PropTypes.func, // function to play next track
+    prevTrack: PropTypes.func, // function to play previous track
   };
 
   static defaultProps = {
@@ -63,6 +89,8 @@ class DefaultTheme extends PureComponent {
     volume: 100,
     setVolume: defaultEventLogger('setVolume'),
     seekTo: defaultEventLogger('seekTo'),
+    nextTrack: defaultEventLogger('nextTrack'),
+    prevTrack: defaultEventLogger('prevTrack'),
   };
 
   // Scarlet don't assume your volume or progress component should be an input,
@@ -84,6 +112,8 @@ class DefaultTheme extends PureComponent {
       currentTime,
       duration,
       volume,
+      nextTrack,
+      prevTrack,
     } = this.props;
 
     return (
@@ -96,11 +126,21 @@ class DefaultTheme extends PureComponent {
         <DefaultButton onClick={pause}>
           Pause
         </DefaultButton>
-        <input type="range" min="0" max={duration} value={currentTime || 0} onChange={this.handleSeekChange} />
-        <DefaultProgressBar percent={(currentTime / duration) || 0}>
-          {Math.round(currentTime)} / {Math.round(duration)}
-        </DefaultProgressBar>
-        <input type="range" min="0" max="100" value={volume || 0} onChange={this.handleVolumeChange} />
+        <DefaultButton onClick={prevTrack}>
+          Prev
+        </DefaultButton>
+        <DefaultButton onClick={nextTrack}>
+          Next
+        </DefaultButton>
+        <DefaultProgress
+          currentTime={currentTime}
+          duration={duration}
+          handleSeekChange={this.handleSeekChange}
+        />
+        <DefaultVolume
+          volume={volume}
+          handleVolumeChange={this.handleVolumeChange}
+        />
       </div>
     );
   }
