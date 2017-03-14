@@ -12,6 +12,8 @@ class Scarlet extends PureComponent {
     playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
     isAutoPlay: PropTypes.bool,
     children: PropTypes.func,
+    youtubeApiKey: PropTypes.string.isRequired,
+    soundcloudClientId: PropTypes.string.isRequired,
   };
 
   state = {
@@ -28,6 +30,9 @@ class Scarlet extends PureComponent {
       onReady: this.onReady,
       onEnd: this.onEnd,
       onDurationReady: this.onDurationReady,
+    }, {
+      youtubeApiKey: this.props.youtubeApiKey,
+      soundcloudClientId: this.props.soundcloudClientId,
     })
       .then((loadTrack) => {
         this.scarlet = loadTrack;

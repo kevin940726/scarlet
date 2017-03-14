@@ -1,16 +1,18 @@
 import getYoutubeId from 'get-youtube-id';
 import fetch from 'isomorphic-fetch';
 import { stringify } from 'query-string';
-import SC from './sc';
-import credentials from '../credentials.json';
+import setupSoundCloud from './sc';
 
 import youtube from './youtube';
 import SoundCloud from './soundcloud';
 
-const scarlet = async (methods = {}) => {
+const scarlet = async (methods = {}, keys) => {
+  const { youtubeApiKey, soundcloudClientId } = keys;
+  const SC = setupSoundCloud(soundcloudClientId);
+
   // await youtube to finish loading the API
   const youtubePlayer = await youtube(methods);
-  const soundcloudPlayer = new SoundCloud(methods);
+  const soundcloudPlayer = new SoundCloud(methods, SC);
 
   return async (url) => {
     // stop previous player to prevent overlapping of two players
@@ -25,7 +27,7 @@ const scarlet = async (methods = {}) => {
       const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?${stringify({
         part: 'snippet',
         id: youtubeVideoId,
-        key: credentials.youtubeApiKey,
+        key: youtubeApiKey,
       })}`).then(response => response.json());
 
       return youtubePlayer.loadTrack(youtubeVideoId, res.items[0].snippet);

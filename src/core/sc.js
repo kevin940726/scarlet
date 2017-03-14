@@ -1,8 +1,10 @@
 import SC from 'soundcloud';
-import { soundcloudClientId } from '../credentials.json';
 
-SC.initialize({
-  client_id: soundcloudClientId,
-});
+const setupSoundCloud = (clientId) => {
+  SC.initialize({
+    client_id: clientId,
+  });
+  return SC;
+};
 
-export default SC;
+export default setupSoundCloud;

@@ -1,13 +1,13 @@
-import SC from './sc';
-
 class SoundCloud {
   player = null;
   title = '';
   isPlaying = false;
   duration = 0;
+  SC = {};
 
-  constructor(methods = {}) {
+  constructor(methods = {}, SC) {
     this.methods = methods;
+    this.SC = SC;
   }
 
   getCurrentTime = () => this.player && this.player.currentTime() / 1000; // milliseconds to seconds
@@ -30,7 +30,7 @@ class SoundCloud {
     this.title = metadata.title;
     this.duration = metadata.duration / 1000; // milliseconds to seconds
 
-    SC.stream(trackId)
+    this.SC.stream(trackId)
       .then((player) => {
         this.player = player;
 
