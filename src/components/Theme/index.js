@@ -12,6 +12,9 @@
 import React, { PureComponent, PropTypes } from 'react';
 import styled from 'styled-components';
 
+import DefaultVolume from './Volume';
+import DefaultProgress from './Progress';
+
 const DefaultButton = styled.button`
   background-color: #FFF;
   color: palevioletred;
@@ -20,48 +23,9 @@ const DefaultButton = styled.button`
   border: 2px solid palevioletred;
 `;
 
-const DefaultProgressBar = styled.div`
-  width: 100px;
-  height: 20px;
-  text-align: center;
-  position: relative;
-  &:after: {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 20px;
-    width: ${({ percent }) => percent}%
-  }
-`;
-
 // default to log the event to provide easy debuging interface
 // eslint-disable-next-line no-console
 const defaultEventLogger = name => () => console.log(name);
-
-const DefaultProgress = ({ currentTime, duration, handleSeekChange }) => (
-  <div>
-    <input type="range" min="0" max={duration} value={currentTime || 0} onChange={handleSeekChange} />
-    <DefaultProgressBar percent={(currentTime / duration) || 0}>
-      {Math.round(currentTime)} / {Math.round(duration)}
-    </DefaultProgressBar>
-  </div>
-);
-DefaultProgress.propTypes = {
-  currentTime: PropTypes.number.isRequired,
-  duration: PropTypes.number.isRequired,
-  handleSeekChange: PropTypes.func.isRequired,
-};
-
-const DefaultVolume = ({ volume, handleVolumeChange }) => (
-  <div>
-    <input type="range" min="0" max="100" value={volume || 0} onChange={handleVolumeChange} />
-  </div>
-);
-DefaultVolume.propTypes = {
-  volume: PropTypes.number.isRequired,
-  handleVolumeChange: PropTypes.func.isRequired,
-};
 
 // make it a pure component may be a good practice in most situation.
 class DefaultTheme extends PureComponent {
@@ -93,16 +57,6 @@ class DefaultTheme extends PureComponent {
     prevTrack: defaultEventLogger('prevTrack'),
   };
 
-  // Scarlet don't assume your volume or progress component should be an input,
-  // so you need to implement the event handler for your component and call the methods from props.
-  handleVolumeChange = (e) => {
-    this.props.setVolume(e.target.value);
-  }
-
-  handleSeekChange = (e) => {
-    this.props.seekTo(e.target.value);
-  }
-
   render() {
     const {
       isLoading,
@@ -114,6 +68,8 @@ class DefaultTheme extends PureComponent {
       volume,
       nextTrack,
       prevTrack,
+      seekTo,
+      setVolume,
     } = this.props;
 
     return (
@@ -135,11 +91,11 @@ class DefaultTheme extends PureComponent {
         <DefaultProgress
           currentTime={currentTime}
           duration={duration}
-          handleSeekChange={this.handleSeekChange}
+          seekTo={seekTo}
         />
         <DefaultVolume
           volume={volume}
-          handleVolumeChange={this.handleVolumeChange}
+          setVolume={setVolume}
         />
       </div>
     );

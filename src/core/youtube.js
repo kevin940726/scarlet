@@ -26,7 +26,7 @@ class Youtube {
     }
 
     // fire time update callback
-    this.timeUpdateInterval = setInterval(this.methods.onTimeUpdate, 250);
+    this.timeUpdateInterval = setInterval(this.methods.onTimeUpdate, 1000);
 
     this.methods.onReady();
   };

@@ -3,25 +3,23 @@ import { storiesOf } from '@kadira/storybook'; // eslint-disable-line import/no-
 
 import Scarlet from '../components/Scarlet';
 
-const Player = Scarlet();
-
 storiesOf('refactor', module)
   .add('one youtube', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://www.youtube.com/watch?v=ULyTXwjojgc',
       ]}
     />
   ))
   .add('one soundcloud', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
       ]}
     />
   ))
   .add('two soundcloud', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
         'https://soundcloud.com/jacksonbreitmusic/show-me-the-money-jerry',
@@ -29,7 +27,7 @@ storiesOf('refactor', module)
     />
   ))
   .add('two youtube', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://www.youtube.com/watch?v=ULyTXwjojgc',
         'https://www.youtube.com/watch?v=5ANRKzwcEEY&list=FLp9N6FdCzTyQZKMOZEz2Kjw&index=1',
@@ -37,7 +35,7 @@ storiesOf('refactor', module)
     />
   ))
   .add('youtube then soundcloud', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://www.youtube.com/watch?v=ULyTXwjojgc',
         'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
@@ -45,7 +43,7 @@ storiesOf('refactor', module)
     />
   ))
   .add('soundcloud then youtube', () => (
-    <Player
+    <Scarlet
       playlist={[
         'https://soundcloud.com/too-many-sebastians/craig-paul-hardy-theo-chinara-make-ya-feel-good',
         'https://www.youtube.com/watch?v=ULyTXwjojgc',

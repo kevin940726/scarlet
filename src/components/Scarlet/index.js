@@ -2,14 +2,16 @@ import React, { PureComponent, PropTypes } from 'react';
 import scarlet from '../../core/scarlet';
 import DefaultTheme from '../Theme';
 
-const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
+class Scarlet extends PureComponent {
   static defaultProps = {
     isAutoPlay: true,
+    children: props => <DefaultTheme {...props} />,
   };
 
   static propTypes = {
     playlist: PropTypes.arrayOf(PropTypes.string).isRequired,
     isAutoPlay: PropTypes.bool,
+    children: PropTypes.func,
   };
 
   state = {
@@ -39,17 +41,6 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
     }
   }
 
-  loadTrack = async (url) => {
-    this.setState({
-      isLoading: true,
-    });
-    this.player = await this.scarlet(url);
-    this.setState({
-      currentTime: 0,
-      duration: 0,
-    });
-  }
-
   onReady = () => {
     this.setState({
       duration: this.player.getDuration(),
@@ -76,6 +67,17 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
 
   onEnd = () => {
     this.nextTrack();
+  }
+
+  loadTrack = async (url) => {
+    this.setState({
+      isLoading: true,
+    });
+    this.player = await this.scarlet(url);
+    this.setState({
+      currentTime: 0,
+      duration: 0,
+    });
   }
 
   nextTrack = () => {
@@ -126,23 +128,23 @@ const Player = (Theme = DefaultTheme) => class Scarlet extends PureComponent {
       stop,
     } = this.player;
 
-    return (
-      <Theme
-        isLoading={isLoading}
-        title={title}
-        play={play}
-        pause={pause}
-        stop={stop}
-        currentTime={currentTime}
-        duration={duration}
-        volume={volume}
-        setVolume={this.handleSetVolume}
-        seekTo={this.handleSeekTo}
-        prevTrack={this.prevTrack}
-        nextTrack={this.nextTrack}
-      />
-    );
-  }
-};
+    const themeProps = {
+      isLoading,
+      title,
+      play,
+      pause,
+      stop,
+      currentTime,
+      duration,
+      volume,
+      setVolume: this.handleSetVolume,
+      seekTo: this.handleSeekTo,
+      prevTrack: this.prevTrack,
+      nextTrack: this.nextTrack,
+    };
 
-export default Player;
+    return this.props.children(themeProps);
+  }
+}
+
+export default Scarlet;
