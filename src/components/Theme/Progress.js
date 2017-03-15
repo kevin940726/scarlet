@@ -19,8 +19,29 @@ const DefaultProgressBar = styled.div`
 class DefaultProgress extends PureComponent {
   static propTypes = {
     duration: PropTypes.number.isRequired,
-    currentTime: PropTypes.number.isRequired,
+    currentTime: PropTypes.number,
     seekTo: PropTypes.func.isRequired,
+    getCurrentTime: PropTypes.func,
+  };
+
+  static defaultProps = {
+    currentTime: 0,
+    getCurrentTime: () => {},
+  };
+
+  state = {
+    currentTime: 0,
+  };
+
+  // adding this function in the component or as props (like Redux)
+  // will allow Scarlet to pass this function to the core callback.
+  // so the heavy state-management re-render function can happen in this component only.
+  // you also need to make the `ref` of this component point to `onTimeRefCallback`.
+  // check the `Trace React Updates` checkbox in React devtool to see the difference.
+  onTimeUpdate = () => {
+    this.setState({
+      currentTime: this.props.getCurrentTime(),
+    });
   }
 
   // Scarlet don't assume your volume or progress component should be an input,
@@ -30,7 +51,8 @@ class DefaultProgress extends PureComponent {
   }
 
   render() {
-    const { duration, currentTime } = this.props;
+    const { duration, getCurrentTime } = this.props;
+    const currentTime = getCurrentTime ? this.state.currentTime : this.props.currentTime;
 
     return (
       <div>

@@ -35,12 +35,14 @@ class DefaultTheme extends PureComponent {
     play: PropTypes.func, // function to play the track
     pause: PropTypes.func, // function to pause the track
     currentTime: PropTypes.number, // current time of the playback in seconds
+    getCurrentTime: PropTypes.func, // function to get current time of the playback in seconds
     duration: PropTypes.number, // total duration of the track in seconds
     volume: PropTypes.number, // volume between 0 to 100
     setVolume: PropTypes.func, // function to set the volume
     seekTo: PropTypes.func, // function to seek to a specific time of the playback
     nextTrack: PropTypes.func, // function to play next track
     prevTrack: PropTypes.func, // function to play previous track
+    onTimeRefCallback: PropTypes.func,
   };
 
   static defaultProps = {
@@ -49,12 +51,14 @@ class DefaultTheme extends PureComponent {
     play: defaultEventLogger('play'),
     pause: defaultEventLogger('pause'),
     currentTime: 0,
+    getCurrentTime: () => {},
     duration: 0,
     volume: 100,
     setVolume: defaultEventLogger('setVolume'),
     seekTo: defaultEventLogger('seekTo'),
     nextTrack: defaultEventLogger('nextTrack'),
     prevTrack: defaultEventLogger('prevTrack'),
+    onTimeRefCallback: () => {},
   };
 
   render() {
@@ -64,12 +68,14 @@ class DefaultTheme extends PureComponent {
       play,
       pause,
       currentTime,
+      getCurrentTime,
       duration,
       volume,
       nextTrack,
       prevTrack,
       seekTo,
       setVolume,
+      onTimeRefCallback,
     } = this.props;
 
     return (
@@ -90,8 +96,10 @@ class DefaultTheme extends PureComponent {
         </DefaultButton>
         <DefaultProgress
           currentTime={currentTime}
+          getCurrentTime={getCurrentTime}
           duration={duration}
           seekTo={seekTo}
+          ref={onTimeRefCallback}
         />
         <DefaultVolume
           volume={volume}
