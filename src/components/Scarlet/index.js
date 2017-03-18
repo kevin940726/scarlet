@@ -6,6 +6,10 @@ class Scarlet extends PureComponent {
   static defaultProps = {
     isAutoPlay: true,
     children: props => <DefaultTheme {...props} />,
+    onReady: null,
+    onDurationReady: null,
+    onTimeUpdate: null,
+    onEnd: null,
   };
 
   static propTypes = {
@@ -14,6 +18,10 @@ class Scarlet extends PureComponent {
     children: PropTypes.func,
     youtubeApiKey: PropTypes.string.isRequired,
     soundcloudClientId: PropTypes.string.isRequired,
+    onReady: PropTypes.func,
+    onDurationReady: PropTypes.func,
+    onTimeUpdate: PropTypes.func,
+    onEnd: PropTypes.func,
   };
 
   state = {
@@ -64,22 +72,38 @@ class Scarlet extends PureComponent {
     if (this.props.isAutoPlay) {
       this.player.play();
     }
+
+    if (typeof this.props.onReady === 'function') {
+      this.props.onReady(this.player);
+    }
   }
 
   onDurationReady = () => {
-    this.setState({
-      duration: this.player.getDuration(),
-    });
+    const duration = this.player.getDuration();
+
+    this.setState({ duration });
+
+    if (typeof this.props.onDurationReady === 'function') {
+      this.props.onDurationReady(duration);
+    }
   }
 
   onTimeUpdate = () => {
-    this.setState({
-      currentTime: this.player.getCurrentTime(),
-    });
+    const currentTime = this.player.getCurrentTime();
+
+    this.setState({ currentTime });
+
+    if (typeof this.props.onTimeUpdate === 'function') {
+      this.props.onTimeUpdate(currentTime);
+    }
   }
 
   onEnd = () => {
     this.nextTrack();
+
+    if (typeof this.props.onEnd === 'function') {
+      this.props.onEnd();
+    }
   }
 
   loadTrack = async (url) => {
