@@ -94,15 +94,19 @@ class Scarlet extends PureComponent {
   }
 
   nextTrack = () => {
-    this.setState(({ nowPlaying }, { playlist }) => ({
-      nowPlaying: nowPlaying + 1 >= playlist.length ? 0 : nowPlaying + 1,
-    }));
+    if (!this.state.isLoading) {
+      this.setState(({ nowPlaying }, { playlist }) => ({
+        nowPlaying: nowPlaying + 1 >= playlist.length ? 0 : nowPlaying + 1,
+      }));
+    }
   }
 
   prevTrack = () => {
-    this.setState(({ nowPlaying }, { playlist }) => ({
-      nowPlaying: nowPlaying - 1 < 0 ? playlist.length - 1 : nowPlaying - 1,
-    }));
+    if (!this.state.isLoading) {
+      this.setState(({ nowPlaying }, { playlist }) => ({
+        nowPlaying: nowPlaying - 1 < 0 ? playlist.length - 1 : nowPlaying - 1,
+      }));
+    }
   }
 
   handleSetVolume = (volume) => {
