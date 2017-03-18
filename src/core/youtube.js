@@ -1,8 +1,23 @@
 import { generate } from 'shortid';
 
+const buildThumbnailCollection = (thumbnails) => {
+  const mapping = {
+    high: 'maxres', // 720 x 1280
+    default: 'medium', // 180 x 320
+    small: 'default', // 90 x 120
+  };
+
+  return Object.entries(mapping)
+    .reduce((collection, [name, value]) => ({
+      ...collection,
+      [name]: thumbnails[value] && thumbnails[value].url,
+    }), {});
+};
+
 class Youtube {
   player = null;
   wrapperId = '';
+  thumbnails = null;
   timeUpdateInterval = 0;
 
   constructor(wrapperId, methods = {}) {
@@ -55,6 +70,7 @@ class Youtube {
 
   loadTrack = (trackId, metadata) => {
     this.title = metadata.title;
+    this.thumbnails = buildThumbnailCollection(metadata.thumbnails);
     this.isPlaying = true;
 
     if (this.timeUpdateInterval) {

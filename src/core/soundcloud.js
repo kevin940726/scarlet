@@ -1,6 +1,25 @@
+const buildThumbnailCollection = (artwork) => {
+  if (!artwork) {
+    return null;
+  }
+
+  const mapping = {
+    high: 't500x500',
+    default: 'large',
+    small: 'small',
+  };
+
+  return Object.entries(mapping)
+    .reduce((collection, [name, value]) => ({
+      ...collection,
+      [name]: artwork.replace(/large/g, value),
+    }), {});
+};
+
 class SoundCloud {
   player = null;
   title = '';
+  thumbnails = null;
   isPlaying = false;
   duration = 0;
   SC = {};
@@ -29,6 +48,7 @@ class SoundCloud {
   loadTrack = (trackId, metadata = {}) => {
     this.title = metadata.title;
     this.duration = metadata.duration / 1000; // milliseconds to seconds
+    this.thumbnails = buildThumbnailCollection(metadata.artwork_url);
 
     this.SC.stream(trackId)
       .then((player) => {

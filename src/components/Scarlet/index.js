@@ -171,6 +171,7 @@ class Scarlet extends PureComponent {
       pause,
       stop,
       getCurrentTime,
+      thumbnails,
     } = this.player;
 
     const themeProps = {
@@ -183,6 +184,7 @@ class Scarlet extends PureComponent {
       getCurrentTime,
       duration,
       volume,
+      thumbnails,
       setVolume: this.handleSetVolume,
       seekTo: this.handleSeekTo,
       prevTrack: this.prevTrack,
