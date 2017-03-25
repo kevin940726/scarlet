@@ -54,6 +54,12 @@ class Scarlet extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    if (typeof this.player.stop === 'function') {
+      this.player.stop();
+    }
+  }
+
   onReady = () => {
     this.setState({
       duration: this.player.getDuration(),
@@ -100,6 +106,11 @@ class Scarlet extends PureComponent {
 
   setOnTimeUpdateCallback = (callback) => {
     this.onTimeUpdate = callback;
+
+    // if player already init, called this function more than once
+    if (typeof this.player.setOnTimeUpdateCallback === 'function') {
+      this.player.setOnTimeUpdateCallback(callback);
+    }
   }
 
   loadTrack = async (url) => {

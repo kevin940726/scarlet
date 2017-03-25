@@ -23,10 +23,13 @@ class SoundCloud {
   isPlaying = false;
   duration = 0;
   SC = {};
+  onTimeUpdate = null;
 
   constructor(methods = {}, SC) {
     this.methods = methods;
     this.SC = SC;
+
+    this.onTimeUpdate = methods.onTimeUpdate;
   }
 
   getCurrentTime = () => this.player && this.player.currentTime() / 1000; // milliseconds to seconds
@@ -44,6 +47,14 @@ class SoundCloud {
   pause = () => this.player && this.player.pause();
 
   stop = () => this.player && this.player.dispose();
+
+  setOnTimeUpdateCallback = (callback) => {
+    if (this.player) {
+      this.player.off('time', this.onTimeUpdate);
+      this.onTimeUpdate = callback;
+      this.player.on('time', this.onTimeUpdate);
+    }
+  }
 
   loadTrack = (trackId, metadata = {}) => {
     this.title = metadata.title;

@@ -19,10 +19,13 @@ class Youtube {
   wrapperId = '';
   thumbnails = null;
   timeUpdateInterval = 0;
+  onTimeUpdate = null;
 
   constructor(wrapperId, methods = {}) {
     this.wrapperId = wrapperId;
     this.methods = methods;
+
+    this.onTimeUpdate = methods.onTimeUpdate;
   }
 
   getCurrentTime = () => this.player && this.player.getCurrentTime();
@@ -35,14 +38,22 @@ class Youtube {
 
   seekTo = time => this.player && this.player.seekTo(time);
 
-  handlePlayerReady = () => {
+  clearOnTimeUpdate = () => {
     if (this.timeUpdateInterval) {
       clearInterval(this.timeUpdateInterval);
     }
+  }
 
-    // fire time update callback
-    this.timeUpdateInterval = setInterval(this.methods.onTimeUpdate, 500);
+  setOnTimeUpdate = () => {
+    if (typeof this.onTimeUpdate === 'function') {
+      // fire time update callback
+      this.timeUpdateInterval = setInterval(this.onTimeUpdate, 500);
+    }
+  }
 
+  handlePlayerReady = () => {
+    this.clearOnTimeUpdate();
+    this.setOnTimeUpdate();
     this.methods.onReady();
   };
 
@@ -66,6 +77,13 @@ class Youtube {
   stop = () => {
     this.pause();
     this.seekTo(0);
+    this.clearOnTimeUpdate();
+  }
+
+  setOnTimeUpdateCallback = (callback) => {
+    this.clearOnTimeUpdate();
+    this.onTimeUpdate = callback;
+    this.setOnTimeUpdate();
   }
 
   loadTrack = (trackId, metadata) => {
