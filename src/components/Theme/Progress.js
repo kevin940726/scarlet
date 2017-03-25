@@ -22,6 +22,7 @@ class DefaultProgress extends PureComponent {
     currentTime: PropTypes.number,
     seekTo: PropTypes.func.isRequired,
     getCurrentTime: PropTypes.func,
+    setOnTimeUpdateCallback: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -33,11 +34,20 @@ class DefaultProgress extends PureComponent {
     currentTime: 0,
   };
 
-  // adding this function in the component or as props (like Redux)
-  // will allow Scarlet to pass this function to the core callback.
-  // so the heavy state-management re-render function can happen in this component only.
-  // you also need to make the `ref` of this component point to `onTimeRefCallback`.
-  // check the `Trace React Updates` checkbox in React devtool to see the difference.
+  componentDidMount() {
+    const { setOnTimeUpdateCallback } = this.props;
+
+    if (typeof setOnTimeUpdateCallback === 'function') {
+      setOnTimeUpdateCallback(this.onTimeUpdate);
+      // calling this function will let you handle the time update event
+      // with the callback passed in. In this way, you can manually set the duration
+      // in the minimal component state, so that the other part of the theme won't do
+      // unneccesary update.
+      // NOTE: this function should only be called once in most cases,
+      // placing it in `componentDidMount` is considered to be a good practice.
+    }
+  }
+
   onTimeUpdate = () => {
     this.setState({
       currentTime: this.props.getCurrentTime(),

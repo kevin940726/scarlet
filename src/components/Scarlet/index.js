@@ -34,10 +34,7 @@ class Scarlet extends PureComponent {
 
   componentDidMount() {
     scarlet({
-      onTimeUpdate: this.timeRef ?
-        (this.timeRef.props.onTimeUpdate || this.timeRef.onTimeUpdate) :
-        this.onTimeUpdate,
-      // if there is timeRef specified, use it, otherwise use the state of this component
+      onTimeUpdate: this.onTimeUpdate,
       onReady: this.onReady,
       onEnd: this.onEnd,
       onDurationReady: this.onDurationReady,
@@ -55,11 +52,6 @@ class Scarlet extends PureComponent {
     if (prevState.nowPlaying !== this.state.nowPlaying) {
       this.loadTrack(this.props.playlist[this.state.nowPlaying]);
     }
-  }
-
-  // the ref callback function on the component which implement `onTimeUpdate` function (optional)
-  onTimeRefCallback = (ref) => {
-    this.timeRef = ref;
   }
 
   onReady = () => {
@@ -104,6 +96,10 @@ class Scarlet extends PureComponent {
     if (typeof this.props.onEnd === 'function') {
       this.props.onEnd();
     }
+  }
+
+  setOnTimeUpdateCallback = (callback) => {
+    this.onTimeUpdate = callback;
   }
 
   loadTrack = async (url) => {
@@ -154,9 +150,6 @@ class Scarlet extends PureComponent {
   scarlet = {};
   player = {};
 
-  // the ref of the component which implement `onTimeUpdate`
-  timeRef = null;
-
   render() {
     const {
       currentTime,
@@ -189,7 +182,7 @@ class Scarlet extends PureComponent {
       seekTo: this.handleSeekTo,
       prevTrack: this.prevTrack,
       nextTrack: this.nextTrack,
-      onTimeRefCallback: this.onTimeRefCallback,
+      setOnTimeUpdateCallback: this.setOnTimeUpdateCallback,
     };
 
     return this.props.children(themeProps);

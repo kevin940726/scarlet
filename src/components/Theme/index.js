@@ -42,7 +42,7 @@ class DefaultTheme extends PureComponent {
     seekTo: PropTypes.func, // function to seek to a specific time of the playback
     nextTrack: PropTypes.func, // function to play next track
     prevTrack: PropTypes.func, // function to play previous track
-    onTimeRefCallback: PropTypes.func, // ref to call the `onTimeUpdate` callback
+    setOnTimeUpdateCallback: PropTypes.func, // ref to call the `onTimeUpdate` callback
     thumbnails: PropTypes.objectOf(PropTypes.string), // track thumnails object
   };
 
@@ -59,8 +59,8 @@ class DefaultTheme extends PureComponent {
     seekTo: defaultEventLogger('seekTo'),
     nextTrack: defaultEventLogger('nextTrack'),
     prevTrack: defaultEventLogger('prevTrack'),
-    onTimeRefCallback: () => {},
     thumbnails: null,
+    setOnTimeUpdateCallback: null,
   };
 
   render() {
@@ -77,7 +77,7 @@ class DefaultTheme extends PureComponent {
       prevTrack,
       seekTo,
       setVolume,
-      onTimeRefCallback,
+      setOnTimeUpdateCallback,
       thumbnails,
     } = this.props;
 
@@ -106,7 +106,7 @@ class DefaultTheme extends PureComponent {
           getCurrentTime={getCurrentTime}
           duration={duration}
           seekTo={seekTo}
-          ref={onTimeRefCallback}
+          setOnTimeUpdateCallback={setOnTimeUpdateCallback}
         />
         <DefaultVolume
           volume={volume}
